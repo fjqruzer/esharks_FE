@@ -172,20 +172,19 @@ export default function CheckOutModal({ cart = [], total = 0, onCancel, onChecko
       return;
     }
 
-    // Build payload for new flow
+
 let payload = {
   address_id: useSavedAddress && addressId ? addressId : undefined,
   success_url: window.location.origin + "/order-success",
   cancel_url: window.location.origin + "/cart",
-  send_email_receipt: true, // <--- always send email
-  // Add address fields if not using saved address
+  send_email_receipt: true,
   ...( !useSavedAddress && {
     address: addressDetails.address_line,
     city: addressDetails.city,
     province: addressDetails.province,
     postal_code: addressDetails.postal_code,
     country: addressDetails.country,
-  })
+  }),
 };
 
  
@@ -382,10 +381,6 @@ let payload = {
                 />
                 <input
                   type="text"
-                  name="postal_code"
-                  placeholder="ZIP / Postal Code"
-                  value={addressDetails.postal_code}
-                  onChange={handleAddressChange}
                   required
                   className="px-3 py-2 border rounded"
                 />
