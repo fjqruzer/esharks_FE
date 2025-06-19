@@ -461,14 +461,14 @@ export default function OrderTable() {
             <div className="flex justify-between items-center mb-6">
 
               <h3 className="text-xl font-bold text-gray-900">Order Details</h3>
-              <button
+              {/* <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-400 hover:text-gray-600 focus:outline-none"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
-              </button>
+              </button> */}
             </div>
 
             <div className="space-y-6">
