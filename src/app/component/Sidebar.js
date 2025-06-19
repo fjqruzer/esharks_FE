@@ -6,15 +6,15 @@ import { usePathname } from "next/navigation"
 import { HomeIcon, UsersIcon, ShoppingBagIcon, BarChartIcon, Warehouse, ScanBarcode, ChartBarStacked, Gem as ChartBarIcon, CogIcon, LogOutIcon, MenuIcon, XIcon, WarehouseIcon, ScanBarcodeIcon, ChartBarStackedIcon, GemIcon } from "lucide-react"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: HomeIcon },
+  // { name: "Dashboard", href: "/", icon: HomeIcon },
   { name: "Accounts", href: "/accounts", icon: UsersIcon },
   { name: "Categories", href: "/categories", icon: ChartBarStackedIcon },
   { name: "Products", href: "/products", icon: ScanBarcodeIcon },
   { name: "Features", href: "/features", icon: GemIcon },
   { name: "Inventory", href: "/inventory", icon: WarehouseIcon },
   { name: "Orders", href: "/orders", icon: ShoppingBagIcon },
-  { name: "Reports", href: "/reports", icon: BarChartIcon },
-  { name: "Analytics", href: "/analytics", icon: ChartBarIcon },
+  { name: "Analytics", href: "/reports", icon: BarChartIcon },
+  // { name: "Analytics", href: "/analytics", icon: ChartBarIcon },
 ]
 
 export default function Sidebar() {

@@ -3,10 +3,58 @@
 import { useState, useEffect } from "react"
 import { PencilIcon, TrashIcon, PlusIcon, EyeIcon, ChevronLeft, ChevronRight } from "lucide-react"
 
+// Separate ViewAccountModal component
+function ViewAccountModal({ account, onClose }) {
+  if (!account) return null
+
+  // Define fields to display in a nice order and with friendly labels
+  const fields = [
+    { label: "Account ID", value: account.id },
+    { label: "First Name", value: account.FirstName },
+    { label: "Middle Initial", value: account.MI },
+    { label: "Last Name", value: account.LastName },
+    { label: "School ID", value: account.SchoolID },
+    { label: "Email", value: account.email },
+    { label: "Phone Number", value: account.Phone_Number },
+    { label: "Admin Privileges", value: account.IsAdmin ? "Yes" : "No" },
+    { label: "Status", value: account.status },
+    // Add more fields as needed
+  ]
+
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+      <div className="relative mx-auto p-6 border w-full max-w-md shadow-lg rounded-md bg-white">
+        <h3 className="text-xl font-bold text-neutral-900 mb-6 text-center">Account Details</h3>
+        <div className="space-y-3">
+          {fields.map(
+            (field) =>
+              field.value !== undefined &&
+              field.value !== null && (
+                <div key={field.label} className="flex justify-between border-b pb-2">
+                  <span className="font-medium text-gray-700">{field.label}</span>
+                  <span className="text-gray-900 text-right break-all">{field.value}</span>
+                </div>
+              ),
+          )}
+        </div>
+        <div className="flex justify-end mt-8">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AccountsTable() {
   const [accounts, setAccounts] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [editingAccount, setEditingAccount] = useState(null)
+  const [viewingAccount, setViewingAccount] = useState(null)
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [token, setToken] = useState("")
@@ -25,7 +73,7 @@ export default function AccountsTable() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const itemsPerPage = 8
 
   // Fetch accounts from API and save token for testing display
   useEffect(() => {
@@ -38,7 +86,6 @@ export default function AccountsTable() {
         },
       })
       const data = await res.json()
-      // Ensure every account has an 'id' property
       setAccounts(
         (data.users || []).map(user => ({
           ...user,
@@ -213,56 +260,70 @@ export default function AccountsTable() {
           <span>Add Account</span>
         </button>
       </div>
-      {/* <div className="px-6 py-2">
-        <div className="text-xs text-gray-500 mb-2">JWT Token (for testing):</div>
-        <div className="break-all text-xs bg-gray-900 p-2 rounded">{token || "No token found"}</div>
-      </div> */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {paginatedAccounts[0] && Object.keys(paginatedAccounts[0]).map((key) => (
-                <th key={key} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{key}</th>
-              ))}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedAccounts.map((account, idx) => (
-              <tr key={account.id || idx} className="hover:bg-gray-50">
-                {Object.keys(account).map((key) => (
-                  <td key={key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {key.toLowerCase().includes("password")
-                      ? account[key] && typeof account[key] === "string"
-                        ? "•".repeat(Math.min(account[key].length, 10))
-                        : ""
-                      : typeof account[key] === "boolean"
-                        ? account[key] ? "Yes" : "No"
-                        : String(account[key])
-                    }
-                  </td>
-                ))}
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <div className="flex space-x-2">
-                    <button className="text-blue-600 hover:text-blue-900">
-                      <EyeIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleEdit(account)}
-                      className="text-indigo-600 hover:text-indigo-900">
-                      <PencilIcon className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(account.id)}
-                      className="text-red-600 hover:text-red-900">
-                      <TrashIcon className="w-4 h-4" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {paginatedAccounts.map((account, idx) => (
+          <div
+            key={account.id || idx}
+            className="relative bg-gradient-to-br from-blue-50 to-white border border-white-200 rounded-xl shadow hover:shadow-lg transition-all duration-200 flex flex-col items-center p-5"
+          >
+            <div className="w-24 h-24 rounded-full shadow-lg bg-white flex items-center justify-center mb-4 text-4xl font-bold text-blue-900 select-none">
+              {account.FirstName?.[0] || "U"}
+            </div>
+            <div className="w-full">
+              <div className="text-center font-semibold text-lg text-neutral-900 mb-1">
+                {account.FirstName} {account.LastName}
+              </div>
+              <div className="text-center text-xs text-gray-500 mb-2">{account.email}</div>
+              {/* <div className="flex flex-col gap-1 text-sm">
+                <div>
+                  <span className="font-medium text-gray-700">Account ID:</span>{" "}
+                  <span className="text-gray-900">{account.id}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">School ID:</span>{" "}
+                  <span className="text-gray-900">{account.SchoolID}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Phone:</span>{" "}
+                  <span className="text-gray-900">{account.Phone_Number}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Admin:</span>{" "}
+                  <span className="text-gray-900">{account.IsAdmin ? "Yes" : "No"}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-700">Status:</span>{" "}
+                  <span className={`font-semibold ${account.status === "Active" ? "text-green-600" : "text-red-600"}`}>
+                    {account.status}
+                  </span>
+                </div>
+              </div> */}
+            </div>
+            <div className="absolute top-2 right-2 flex space-x-1">
+              <button
+                className="text-blue-600 hover:text-blue-900"
+                onClick={() => setViewingAccount(account)}
+                title="View"
+              >
+                <EyeIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleEdit(account)}
+                className="text-indigo-600 hover:text-indigo-900"
+                title="Edit"
+              >
+                <PencilIcon className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleDelete(account.id)}
+                className="text-red-600 hover:text-red-900"
+                title="Delete"
+              >
+                <TrashIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
       {/* Pagination Controls */}
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
@@ -326,7 +387,7 @@ export default function AccountsTable() {
           </div>
         </div>
       </div>
-      {/* Modal code remains unchanged */}
+      {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative mx-auto p-5 border w-100 shadow-lg rounded-md bg-white">
@@ -495,6 +556,8 @@ export default function AccountsTable() {
           </div>
         </div>
       )}
+      {/* View Modal */}
+      <ViewAccountModal account={viewingAccount} onClose={() => setViewingAccount(null)} />
     </div>
   )
 }

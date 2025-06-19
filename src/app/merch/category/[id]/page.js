@@ -34,7 +34,8 @@ export default function ProductPage({ params }) {
         if (!data || data.error) {
           setError("Product not found")
         } else {
-          setProduct({
+          const inventoryArr = Array.isArray(data.inventory) ? data.inventory : data.inventory ? [data.inventory] : [];
+          const productObj = {
             id: data.ProductID,
             sku: data.SKU,
             name: data.Name,
@@ -45,13 +46,11 @@ export default function ProductPage({ params }) {
             badge: data.Badge,
             description: data.Description,
             features: Array.isArray(data.features) ? data.features.map(f => f.Description) : [],
-            sizes: Array.isArray(data.inventory)
-              ? data.inventory.filter(i => i.IsAvailable === 1 && i.Quantity_In_Stock > 0).map(i => i.Size)
-              : [],
-            stock: Array.isArray(data.inventory)
-              ? data.inventory.filter(i => i.IsAvailable === 1 && i.Quantity_In_Stock > 0).map(i => i.Quantity_In_Stock)
-              : [],
-          })
+            sizes: inventoryArr.filter(i => i.IsAvailable === 1 && i.Quantity_In_Stock > 0).map(i => i.Size),
+            stock: inventoryArr.filter(i => i.IsAvailable === 1 && i.Quantity_In_Stock > 0).map(i => i.Quantity_In_Stock),
+          };
+          console.log("DEBUG product:", productObj, data.inventory);
+          setProduct(productObj);
         }
         setLoading(false)
       })
