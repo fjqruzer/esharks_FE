@@ -93,18 +93,21 @@ export default function OrderTable() {
       id: "processing",
       label: "Processing",
       icon: Clock,
+      color: "text-yellow-800",
       count: orders.filter((order) => order.IsReceived === "processing").length,
     },
     {
       id: "in_transit",
       label: "In Transit",
       icon: Truck,
+      color: "text-blue-800",
       count: orders.filter((order) => order.IsReceived === "in_transit").length,
     },
     {
       id: "completed",
       label: "Completed",
       icon: CheckCircle,
+      color: "text-green-800",
       count: orders.filter((order) => order.IsReceived === "completed").length,
     },
   ]
@@ -112,13 +115,13 @@ export default function OrderTable() {
   const getStatusColor = (status) => {
     switch (status) {
       case "processing":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-200 text-yellow-800"
       case "in_transit":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-200 text-blue-800"
       case "completed":
-        return "bg-green-100 text-green-800"
+        return "bg-green-200 text-green-800"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-200 text-gray-800"
     }
   }
 
@@ -184,27 +187,23 @@ export default function OrderTable() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            status: newStatus,
-            order_id: selectedOrder.OrderID,
+            IsReceived: newStatus, 
           }),
         }
       )
 
       if (response.ok) {
-        // Update the orders state with the new status
+        // Update the orders state with the new IsReceived value
         const updatedOrders = orders.map((order) =>
-          order.id === selectedOrderOrderID ? { ...order, status: newStatus } : order, // Use 'id' for comparison
+          order.OrderID === selectedOrder.OrderID ? { ...order, IsReceived: newStatus } : order
         )
         setOrders(updatedOrders)
 
         // Update the selected order in the modal
-        setSelectedOrder({ ...selectedOrder, status: newStatus })
+        setSelectedOrder({ ...selectedOrder, IsReceived: newStatus })
 
-        // Close the status modal
         setShowStatusModal(false)
-        setShowModal(true); // Keep the main order details modal open
-
-        // Show success message (you can replace with a toast notification)
+        setShowModal(true)
         alert(`Order status updated to ${newStatus.replace("_", " ")}`)
       } else {
         throw new Error("Failed to update status")
@@ -222,6 +221,25 @@ export default function OrderTable() {
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-200">
         <h3 className="text-lg font-medium text-gray-900">Order Management</h3>
+        {/* Status Legends */}
+        <div className="flex flex-wrap gap-4 mt-2">
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-4 h-4 rounded-full bg-yellow-200 border border-yellow-400"></span>
+            <span className="text-sm text-yellow-800">Processing</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-4 h-4 rounded-full bg-blue-200 border border-blue-400"></span>
+            <span className="text-sm text-blue-800">In Transit</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-4 h-4 rounded-full bg-green-200 border border-green-400"></span>
+            <span className="text-sm text-green-800">Completed</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-4 h-4 rounded-full bg-gray-200 border border-gray-400"></span>
+            <span className="text-sm text-gray-800">Other</span>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -244,22 +262,25 @@ export default function OrderTable() {
         <nav className="hidden sm:flex space-x-8 px-6" aria-label="Tabs">
           {tabs.map((tab) => {
             const Icon = tab.icon
+            const isActive = activeTab === tab.id
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`${
-                  activeTab === tab.id
-                    ? "border-blue-500 text-blue-600"
+                className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2
+                  ${isActive
+                    ? (tab.color || "border-blue-500 text-blue-600") + " border-b-2"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
                 <span
-                  className={`${
-                    activeTab === tab.id ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"
-                  } inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium`}
+                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    ${isActive
+                      ? (tab.color || "bg-blue-100 text-blue-600")
+                      : "bg-gray-100 text-gray-600"
+                    }`}
                 >
                   {tab.count}
                 </span>
@@ -298,7 +319,11 @@ export default function OrderTable() {
                     {/* Order Header */}
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900">Order #{order.OrderID}</h4>
+                       
+                        <h4 className="text-lg font-semibold text-gray-900">   <span
+                        className={`inline-flex items-center px-2 py-2 me-2 rounded-full text-xs font-medium ${getStatusColor(order.IsReceived)}`}
+                      ></span>Order #{order.OrderID}</h4>
+                        
                         <p className="text-sm text-gray-500">{formatDate(order.created_at)}</p>
                       </div>
                       <span
@@ -325,8 +350,8 @@ export default function OrderTable() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Received:</span>
-                        <span className={`text-sm font-medium ${order.IsReceived ? "text-green-600" : "text-red-600"}`}>
-                          {order.IsReceived ? "Yes" : "No"}
+                        <span className={`text-sm font-medium ${order.IsReceived === "completed" ? "text-green-600" : "text-red-600"}`}>
+                          {order.IsReceived === "completed" ? "Yes" : "No"}
                         </span>
                       </div>
                       <div className="flex justify-between items-center pt-2 border-t border-gray-200">
@@ -536,11 +561,11 @@ export default function OrderTable() {
                   <div className="flex items-center space-x-3">
                     <div
                       className={`w-3 h-3 rounded-full ${
-                        selectedOrder.status === "completed" // Changed from IsReceived to status
+                        selectedOrder.IsReceived === "completed" // Changed from IsReceived to status
                           ? "bg-green-500"
-                          : selectedOrder.status === "in_transit" // Changed from IsReceived to status
+                          : selectedOrder.IsReceived === "in_transit" // Changed from IsReceived to status
                           ? "bg-blue-500"
-                          : selectedOrder.status === "processing" // Changed from IsReceived to status
+                          : selectedOrder.IsReceived === "processing" // Changed from IsReceived to status
                           ? "bg-yellow-500"
                           : "bg-red-500"
                       }`}
