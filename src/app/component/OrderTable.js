@@ -454,7 +454,7 @@ export default function OrderTable() {
       {/* Order Details Modal */}
       {showModal && selectedOrder && (
 
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div className="fixed inset-0 bg-neutral-900/90 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative my-2 mx-auto p-5 b md:w-3/4 lg:w-1/2  rounded-md bg-white">
 
 

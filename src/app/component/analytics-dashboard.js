@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import Link from "next/link"
 import {
   TrendingUp,
   Users,
@@ -397,7 +398,9 @@ export default function AnalyticsDashboard() {
           <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900">Top Products</h3>
-              <button onClick={() => console.log("View All Products")} className="text-xs sm:text-sm text-blue-600 hover:text-blue-700">View All</button>
+              <Link href="/products">
+              <button  className="text-xs sm:text-sm text-blue-600 hover:text-blue-700">View All</button>
+              </Link>
             </div>
             <div className="space-y-2 sm:space-y-3">
               {parsedTopProducts.map((product, index) => (
@@ -432,7 +435,9 @@ export default function AnalyticsDashboard() {
           <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6">
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900">Recent Orders</h3>
-              <button onClick={() => console.log("View All Orders")} className="text-xs sm:text-sm text-blue-600 hover:text-blue-700">View All</button>
+              <Link href="/orders">
+              <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-700">View All</button>
+              </Link>
             </div>
             <div className="space-y-2 sm:space-y-3">
               {filteredOrders.map((order, index) => (
@@ -501,6 +506,7 @@ export default function AnalyticsDashboard() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             {inventoryAlerts.map((alert, index) => (
+              <Link href="/inventory">
               <div
                 key={index}
                 className="flex items-center justify-between p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 cursor-pointer transition-colors touch-manipulation"
@@ -524,6 +530,7 @@ export default function AnalyticsDashboard() {
                   <MoreHorizontal className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 flex-shrink-0" />
                 </div>
               </div>
+              </Link>
             ))}
           </div>
         </div>

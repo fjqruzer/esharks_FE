@@ -389,8 +389,8 @@ export default function AccountsTable() {
       </div>
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative mx-auto p-5 border w-100 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-neutral-900/90 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative mx-auto p-5 my-30 border w-100 shadow-lg rounded-md bg-white">
             <h3 className="text-lg font-bold text-neutral-900 mb-4">
               {editingAccount ? "Edit Account" : "Add New Account"}
             </h3>

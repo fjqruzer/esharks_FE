@@ -222,7 +222,7 @@ export default function CategoriesTable() {
         <h3 className="text-lg font-medium text-gray-900">Available Categories</h3>
         <button
           onClick={openAddModal}
-          className="bg-neutral-700 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+          className="bg-blue-600 hover:bg-blue-800 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
           <PlusIcon className="w-4 h-4" />
           <span>Add New Category</span>
         </button>
@@ -284,7 +284,7 @@ export default function CategoriesTable() {
         </table>
       </div>
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-neutral-900/90 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
           <div className="relative mx-auto p-5 border md:w-3/4 lg:w-2/3 shadow-lg rounded-md bg-white my-10">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
               {editingCategory ? "Edit Category" : "Add New Category"}
@@ -371,7 +371,7 @@ export default function CategoriesTable() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                 >
                   {editingCategory ? "Update" : "Create"}
                 </button>

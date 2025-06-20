@@ -321,7 +321,7 @@ const handleItemToggle = async (id, currentValue) => {
           />
           <button
             onClick={openAddModal}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
           >
             <PlusIcon className="w-4 h-4" />
             <span>Add Item</span>
@@ -479,8 +479,8 @@ const handleItemToggle = async (id, currentValue) => {
 
       {/* ...modal code remains unchanged... */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative mx-auto p-5 border w-full m-10 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-neutral-900/90 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative mx-auto p-5 border w-300 mt-20 shadow-lg rounded-md bg-white">
             <h3 className="text-lg font-bold text-neutral-900 mb-4">
               {editingItem ? "Edit Inventory Item" : "Add New Inventory Item"}
             </h3>
